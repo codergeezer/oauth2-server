@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight{%5p}--[%T-%-15.15t] [%-20X{X-Request-ID}] %-20.40c{1.} :%m%n%ex
+        </Property>
+    </Properties>
+    <Appenders>
+        <Console name="ConsoleAppender" target="SYSTEM_OUT"
+                 follow="true">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+        </Console>
+        <!-- Rolling File Appender -->
+        <RollingFile name="FileAppender" fileName="logs/app.log" immediateFlush="false"
+                     filePattern="logs/app-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout>
+                <Pattern>${LOG_PATTERN}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="100MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="100"/>
+        </RollingFile>
+        <!--        <Kafka name="KafkaAppender" topic="" syncsend="false">-->
+        <!--            <Property name="bootstrap.servers"></Property>-->
+        <!--            <Property name="acks">1</Property>-->
+        <!--            <JSONLayout compact="true" properties="true">-->
+        <!--                <KeyValuePair key="application" value=""/>-->
+        <!--                <KeyValuePair key="localIp" value="${sys:localIpValue}"/>-->
+        <!--            </JSONLayout>-->
+        <!--        </Kafka>-->
+    </Appenders>
+    <Loggers>
+        <!--        <Logger name="org.apache.kafka" level="WARN"/>-->
+        <Logger name="com.netflix.discovery.shared.resolver.aws.ConfigClusterResolver"
+                     level="error" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="FileAppender"/>
+            <!--            <AppenderRef ref="KafkaAppender"/>-->
+        </Logger>
+
+        <Root level="info" includeLocation="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="FileAppender"/>
+            <!--            <AppenderRef ref="KafkaAppender"/>-->
+        </Root>
+    </Loggers>
+</Configuration>
